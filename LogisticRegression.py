@@ -1,5 +1,5 @@
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import seaborn as sns
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -87,12 +87,21 @@ def predict_survival():
     prediction = logisticregression.predict(input_data)
     
     resultat = 'non survivant'
+    variable = "0"
     
     if prediction == 1:
         resultat = 'survivant'
+        variable = "1"
     
     texte = 'Le passager est un ' + resultat
+    
+    response_data = {
+        'result': resultat,
+        'prediction': variable
+    }
 
-    return texte
+    return jsonify(response_data)
+
+    #return variable #Au lieu de texte pour préparer la question 2
 
 app.run(host="0.0.0.0")
