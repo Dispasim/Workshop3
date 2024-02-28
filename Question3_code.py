@@ -1,3 +1,5 @@
+#On s'est contenté que d'un exemple mais on aurait pu le faire de facon général mais cela aurait été plus long
+#Nous tenons à souligner également que par erreur nous ne sommes pas partis de la même version du dataset
 @app.route('/consensus/', methods=['get'])
 def concensus():
   response_eliot = requests.get("http://127.0.0.1:5000//predict?pclass=1&sex=0&age=25&sibsp=1&parch=0&fare=50&body=10")
