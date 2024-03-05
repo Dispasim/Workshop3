@@ -131,3 +131,60 @@ app.get('/orders/:userId', (req, res) => {
 
   res.json(userOrders);
 });
+
+//Question 2.3
+
+let userCarts = [];
+
+app.post('/cart/:userId', (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const { productId, quantity } = req.body;
+
+  const product = products.find(p => p.id === productId);
+  if (!product) {
+    return res.status(400).json({ error: `Product with ID ${productId} not found.` });
+  }
+
+  let userCart = userCarts.find(cart => cart.userId === userId);
+
+  if (!userCart) {
+    userCart = { userId, items: [] };
+    userCarts.push(userCart);
+  }
+
+  const cartItem = userCart.items.find(item => item.productId === productId);
+
+  if (cartItem) {
+    cartItem.quantity += quantity;
+  } else {
+    userCart.items.push({ productId, quantity });
+  }
+
+  res.json(userCart);
+});
+
+app.get('/cart/:userId', (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const userCart = userCarts.find(cart => cart.userId === userId);
+
+  if (!userCart) {
+    return res.status(404).json({ error: 'Shopping cart not found for the user.' });
+  }
+
+  res.json(userCart);
+});
+
+app.delete('/cart/:userId/item/:productId', (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const productId = parseInt(req.params.productId);
+
+  const userCart = userCarts.find(cart => cart.userId === userId);
+
+  if (!userCart) {
+    return res.status(404).json({ error: 'Shopping cart not found for the user.' });
+  }
+
+  userCart.items = userCart.items.filter(item => item.productId !== productId);
+
+  res.json(userCart);
+});
