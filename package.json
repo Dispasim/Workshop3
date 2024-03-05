@@ -1,0 +1,15 @@
+{
+  "name": "workshop3",
+  "version": "1.0.0",
+  "description": "Please add your repo link here: https://docs.google.com/spreadsheets/d/1M_8tSkOGvB49IqCknh4QoGfxgSeskqflMla0ESwAOzc/edit?usp=sharing",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
