@@ -2,6 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
+const { Client } = require('cassandra-driver');
+
+const client = new Client({
+  contactPoints: ['localhost'], 
+  localDataCenter: 'datacenter1',
+  keyspace: 'ecommerce_keyspace',
+});
+
+app.use(bodyParser.json());
 
 //Question 2.1
 

@@ -1,0 +1,29 @@
+--I will use Cassandra like we saw in NoSQL module
+
+--In CQLSH Cassandra :
+
+CREATE KEYSPACE IF NOT EXISTS ecommerce_keyspace WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 1};
+
+USE ecommerce_keyspace;
+
+CREATE TABLE IF NOT EXISTS products (
+  id UUID PRIMARY KEY,
+  name TEXT,
+  description TEXT,
+  price DECIMAL,
+  category TEXT,
+  instock BOOLEAN
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  orderId UUID PRIMARY KEY,
+  userId UUID,
+  products LIST<UUID>,
+  total DECIMAL,
+  status TEXT
+);
+
+CREATE TABLE IF NOT EXISTS user_carts (
+  userId UUID PRIMARY KEY,
+  items MAP<UUID, INT>
+);
