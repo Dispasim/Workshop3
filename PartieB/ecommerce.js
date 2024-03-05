@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 
+//Question 2.1
+
 let products = [
   { id: 1, name: 'Pull blanc', description: 'Pull de couleur blanc', price: 20, category: 'Vêtement', inStock: true },
   { id: 2, name: 'Cactus', description: 'Plante qui pique', price: 5, category: 'Plante', inStock: false },
@@ -79,9 +81,53 @@ app.delete('/products/:id', (req, res) => {
 
   products.splice(productIndex, 1);
 
-  res.json({ message: 'Product deleted successfully' });
+  res.json({ message: 'Product deleted' });
 });
 
 app.listen(port, () => {
-  console.log(`E-commerce API Server is running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
+});
+
+
+
+//Question 2.2
+let orders = [];
+
+app.post('/orders', (req, res) => {
+  const { products: orderedProducts, user } = req.body;
+
+  if (!orderedProducts || !Array.isArray(orderedProducts) || orderedProducts.length === 0) {
+    return res.status(400).json({ error: 'Products missingr.' });
+  }
+
+  for (const orderedProduct of orderedProducts) {
+    const productExists = products.some(product => product.id === orderedProduct.productId);
+    if (!productExists) {
+      return res.status(400).json({ error: `Product with ID ${orderedProduct.productId} not found.` });
+    }
+  }
+
+  const orderTotal = orderedProducts.reduce((total, orderedProduct) => {
+    const product = products.find(p => p.id === orderedProduct.productId);
+    return total + product.price * orderedProduct.quantity;
+  }, 0);
+
+  const newOrder = {
+    orderId: orders.length + 1,
+    userId: user?.userId || null,
+    products: orderedProducts,
+    total: orderTotal,
+    status: 'Status...',
+  };
+
+  orders.push(newOrder);
+
+  res.status(201).json(newOrder);
+});
+
+app.get('/orders/:userId', (req, res) => {
+  const userId = parseInt(req.params.userId);
+  const userOrders = orders.filter(order => order.userId === userId);
+
+  res.json(userOrders);
 });
